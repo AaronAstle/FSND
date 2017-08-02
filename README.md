@@ -12,5 +12,3 @@ you must run the following command.
 `$ python fav_movies.py`
 
 This will take the list of movies, create the web page, and open a browser window.
-
-
