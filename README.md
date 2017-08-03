@@ -12,3 +12,6 @@ you must run the following command.
 `$ python fav_movies.py`
 
 This will take the list of movies, create the web page, and open a browser window.
+
+If you want to change the movies on the list, you can just change the itesm in 
+`fav_movies.py` file. Then rerun the above command.
