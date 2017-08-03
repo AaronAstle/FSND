@@ -1,6 +1,7 @@
 import fresh_tomatoes
 import media
 
+# Create Movie objects, in memory, that reflect my favorite movies.
 matrix = media.Movie("The Matrix",
         "An elusive figure considered to be the most dangerous man alive, can \
         answer his question -- What is the Matrix?",
