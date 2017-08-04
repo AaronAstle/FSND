@@ -13,8 +13,7 @@ you must run the following steps.
 
   2.  Run the following command on the CLI:
         `$ python entertainment_center.py`
-
-This will take the list of movies, create the web page, and open a browser window.
+      This will take the list of movies, create the web page, and open a browser window.
 
 If you want to change the movies on the list, you can just change the itesm in
-`entertainment_center.py` file. Then rerun the above command.
+`entertainment_center.py` file. Then rerun step 2.
