@@ -3,15 +3,18 @@
 
 Source code for a Movie Trailer website project.
 
-My favorite movies are stored in a list of objects in `fav_movies.py`.  This 
+My favorite movies are stored in a list of objects in `entertainment_center.py`.  This 
 list is created through the use of the `Movie()` class in the `media.py`.
 
 To create a dynamically generated `*.html` file, in order to view in browsers, 
-you must run the following command.
+you must run the following steps.
 
-`$ python fav_movies.py`
+  1.  Clone this repo
+
+  2.  Run the following command on the CLI:
+        `$ python entertainment_center.py`
 
 This will take the list of movies, create the web page, and open a browser window.
 
-If you want to change the movies on the list, you can just change the itesm in 
-`fav_movies.py` file. Then rerun the above command.
+If you want to change the movies on the list, you can just change the itesm in
+`entertainment_center.py` file. Then rerun the above command.

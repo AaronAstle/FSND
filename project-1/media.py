@@ -1,5 +1,6 @@
 import webbrowser
 
+
 class Movie():
     """Movie Class - Basic structure of the Movies
 
@@ -8,7 +9,9 @@ class Movie():
     poster_image    (str): String of URL to movie poster
     trailer_youtube (str): String of URL to youtube trailer
     """
-    def __init__(self, movie_title, movie_storyline, poster_image, trailer_youtube):
+    def __init__(self,
+                 movie_title, movie_storyline,
+                 poster_image, trailer_youtube):
         self.title = movie_title
         self.storyline = movie_storyline
         self.poster_image_url = poster_image
@@ -16,4 +19,3 @@ class Movie():
 
     def show_trailer(self):
         webbrowser.open(self.trailer_youtube_url)
-
