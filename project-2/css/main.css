@@ -1,0 +1,31 @@
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+/* Header */
+.header__image {
+  width: 60px;
+}
+
+/* Hero */
+.hero__image {
+  max-height: 500px;
+}
+
+
+ /* Features */
+.features {
+  display: flex;
+  flex-direction: row;
+}
+
+.features__card {
+  flex: 33;
+}
+.features__card-title
+
+.features__image {
+  display: block;
+  max-width: 250px;
+  margin: 0 auto;
+}
