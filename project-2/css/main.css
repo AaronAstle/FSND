@@ -1,13 +1,57 @@
+/* Reset Props */
 body {
   font-family: 'Roboto', Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
 }
 
 /* Header */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 2px solid #eee;
+}
+
+.header__container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
 .header__image {
   width: 60px;
+  margin: 15px;
+}
+
+.header__inner {
+  float: right;
+  clear: both;
+  margin: 15px;
+  text-align: right;
+}
+
+.header__title {
+  font-size: 38px;
+  font-weight: 300;
+}
+
+.header__subtitle {
+  font-size: 20px;
+  font-weight: 400;
 }
 
 /* Hero */
+.hero {
+  background-image: url("../img/rocks.jpg");
+  background-position: top center;
+  background-size: cover;
+}
 .hero__image {
   max-height: 500px;
 }
@@ -22,10 +66,22 @@ body {
 .features__card {
   flex: 33;
 }
-.features__card-title
+.features__card-title {
+  text-align: center;
+}
 
 .features__image {
   display: block;
-  max-width: 250px;
+  height: 195px;
   margin: 0 auto;
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
 }
+
+.features__image--one {
+  background-image: url("img/gabby.jpg");
+}
+.features__image--two {}
+.features__image--three {}
