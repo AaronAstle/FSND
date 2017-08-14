@@ -47,13 +47,24 @@ header {
 }
 
 /* Hero */
-.hero {
+#hero {
   background-image: url("../img/rocks.jpg");
   background-position: top center;
   background-size: cover;
+  top:100px;
+  position: relative;
 }
+
 .hero__image {
   max-height: 500px;
+}
+
+.hero__title {
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+  font-size: 45px;
+  font-weight: 300;
 }
 
 
