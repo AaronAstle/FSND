@@ -16,6 +16,7 @@ header {
   width: 100%;
   background-color: #fff;
   border-bottom: 2px solid #eee;
+  z-index: 1;
 }
 
 .header__container {
@@ -32,7 +33,7 @@ header {
 .header__inner {
   float: right;
   clear: both;
-  margin: 15px;
+  margin: 10px 15px;
   text-align: right;
 }
 
@@ -48,11 +49,11 @@ header {
 
 /* Hero */
 #hero {
+  position: relative;
+  top: 90px;
   background-image: url("../img/rocks.jpg");
   background-position: top center;
   background-size: cover;
-  top:100px;
-  position: relative;
 }
 
 .hero__image {
@@ -92,7 +93,7 @@ header {
 }
 
 .features__image--one {
-  background-image: url("img/gabby.jpg");
+  background-image: url("../img/gabby.jpg");
 }
 .features__image--two {}
 .features__image--three {}
