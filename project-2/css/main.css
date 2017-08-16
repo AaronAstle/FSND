@@ -7,6 +7,7 @@ body {
 
 h1, h2, h3, h4 {
   margin: 0;
+  font-weight: 300;
 }
 
 /* Header */
@@ -38,19 +39,21 @@ header {
 }
 
 .header__title {
+  color: #112B49;
   font-size: 38px;
-  font-weight: 300;
 }
 
 .header__subtitle {
+  color: #666;
   font-size: 20px;
-  font-weight: 400;
 }
 
+/* Main Body Content */
 main {
   position: relative;
-  top: 94px;
+  padding: 94px 0 50px;
 }
+
 /* Hero */
 #hero {
   position: relative;
@@ -69,6 +72,7 @@ main {
   top: 50%;
   width: 100%;
   color: #fff;
+  font-size: 30px;
   transform: translateY(-50%);
   text-transform: uppercase;
   text-align: center;
@@ -88,25 +92,62 @@ main {
   text-align: center;
 }
 
- /* Features */
+/* Features */
 .features {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.features__title {
+  text-align: center;
+  margin: 30px 15px;
 }
 
 .features__card {
-  flex: 50;
-  padding: 0 15px;
-  overflow: hidden;
+  display: flex;
+  flex: 3;
+  padding: 0 30px;
+  text-align: center;
+  flex-direction: column;
 }
 .features__card-title {
-  text-align: center;
+  margin: 15px 0;
+  font-weight: 500;
+}
+.features__image {
+  width: 100%;
+  overflow: hidden;
 }
 
-.features__image {
-  display: block;
-  height: 195px;
-  margin: 0 auto;
-  overflow: hidden;
+footer {
+  height: 50px;
+  padding: 50px 15px;
+  background-color: #333;
+}
+
+footer ul {
+  float: right;
+}
+
+footer li {
+  display: inline-block;
+  margin: 0 15px;
+}
+
+footer a {
+  color: #fff;
+}
+
+/* Tablet Size Things */
+@media screen and (max-width: 960px) {
+
+  /* Features Cards change width */
+  .features__card {
+    flex: 2 40%;
+  }
+
+
+
 }
