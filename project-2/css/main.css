@@ -3,6 +3,7 @@ body {
   font-family: 'Roboto', Arial, sans-serif;
   padding: 0;
   margin: 0;
+  min-width: 315px;
 }
 
 h1, h2, h3, h4 {
@@ -15,6 +16,7 @@ header {
   position: fixed;
   top: 0;
   width: 100%;
+  min-width: 315px;
   background-color: #fff;
   border-bottom: 2px solid #eee;
   z-index: 1;
@@ -49,7 +51,7 @@ header {
 }
 
 /* Main Body Content */
-main {
+.content {
   position: relative;
   padding: 94px 0 50px;
 }
@@ -101,6 +103,7 @@ main {
 }
 
 .features__title {
+  width: 100%;
   text-align: center;
   margin: 30px 15px;
 }
@@ -108,19 +111,22 @@ main {
 .features__card {
   display: flex;
   flex: 3;
-  padding: 0 30px;
+  padding: 0 30px 30px;
   text-align: center;
   flex-direction: column;
 }
+
 .features__card-title {
   margin: 15px 0;
   font-weight: 500;
 }
+
 .features__image {
   width: 100%;
   overflow: hidden;
 }
 
+/* Footer */
 footer {
   height: 50px;
   padding: 50px 15px;
@@ -146,8 +152,22 @@ footer a {
   /* Features Cards change width */
   .features__card {
     flex: 2 40%;
+    max-width: 40%;
   }
 
+}
 
+/* Phone Size Things */
+@media screen and (max-width: 599px) {
 
+  /* Features Cards change width */
+  .features__card {
+    flex: 1 100%;
+    max-width: 100%;
+  }
+
+  .features__image {
+    width: 75%;
+    margin: 0 auto;
+  }
 }

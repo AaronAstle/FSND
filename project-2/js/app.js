@@ -6,3 +6,5 @@ function resizeHero() {
 };
 
 resizeHero();
+
+window.onresize = resizeHero;
