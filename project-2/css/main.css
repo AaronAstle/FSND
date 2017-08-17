@@ -133,10 +133,6 @@ footer {
   background-color: #333;
 }
 
-footer ul {
-  float: right;
-}
-
 footer li {
   display: inline-block;
   margin: 0 15px;
