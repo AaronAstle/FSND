@@ -61,14 +61,17 @@ def get_popular_authors():
 def get_top_errorday():
     """
     Return the day with the most errors
+    
+    Github @sagarchoudhary96 was used a reference.
+    Due to me being stuck on the CASE statement.
     """
     error_days = get_results("""
         SELECT * FROM (
-        SELECT date(time), round(100.0 * SUM(
+        SELECT date(time), round(SUM(
             CASE log.status
-            WHEN '200 OK'
+            WHEN '%200%'
             THEN 0 ELSE 1
-            END) / count(log.status),2)
+            END) * 100 / count(log.status), 2)
             AS error_perc
             FROM log GROUP BY date(time)
             ORDER BY error_perc DESC)
