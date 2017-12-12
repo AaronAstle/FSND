@@ -215,15 +215,20 @@ def login_required(f):
 
 # App Routing
 @app.route('/')
-@app.route('/catalog')
 def showLanding():
-    categories = session.query(Category).order_by(asc(Category.name))
     latestItems = session.query(Item).order_by(Item.id.desc())
     return render_template(
         'index.html',
-        categories=categories,
         latestItems=latestItems)
 
+@app.route('/catalog')
+def showCatalog():
+    categories = session.query(Category).order_by(asc(Category.name))
+    latestItems = session.query(Item).order_by(Item.id.desc())
+    return render_template(
+        'catalog.html',
+        categories=categories,
+        latestItems=latestItems)
 
 @app.route('/catalog/<int:category_id>/items')
 def showItems(category_id):
@@ -234,12 +239,11 @@ def showItems(category_id):
 
 
 # Show an items's details
-@app.route('/catalog/<int:category_id>/<int:item_id>')
+@app.route('/catalog/<int:category_id>/items/<int:item_id>')
 def itemDetails(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(Item).filter_by(id=item_id).one()
-    return render_template('item.html', item=item, category=category)
-
+    return render_template('itemDetail.html', item=item, category=category)
 
 
 @app.route('/catalog/items/new', methods=['GET', 'POST'])
