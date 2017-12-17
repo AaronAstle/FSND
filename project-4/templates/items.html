@@ -23,6 +23,11 @@
     </div>
     <div class="col-md-8">
       <h2>Items</h2>
+
+      <div class="pull-right">
+        <a href="{{url_for('newItem', category_id = category.id)}}">Add New Item</a>
+      </div>
+
       <ul class="list-unstyled">
         {% for item in items %}
         <li><a href="{{url_for('itemDetails', category_id = item.category.id, item_id = item.id)}}">{{ item.name }}</a> ({{ item.category.name }})</li>

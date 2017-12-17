@@ -3,3 +3,7 @@
 *.swp
 
 *.vagrant
+*/public/uploads/*
+
+*.db-journal
+*.db

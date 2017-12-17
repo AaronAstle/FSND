@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response, send_from_directory
 from flask import session as login_session
 
 from sqlalchemy import create_engine, asc
@@ -12,16 +12,23 @@ from oauth2client.client import AccessTokenCredentials
 
 from functools import wraps
 
+from werkzeug.utils import secure_filename
+
+import datetime
 import httplib2
 import json
+import os
 import random
 import requests
 import string
 
+UPLOAD_FOLDER = 'public/uploads/'
+ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'gif'])
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-# Client Secrets
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Bikes N Stuff"
@@ -34,6 +41,13 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/public/uploads/<filename>')
+def send_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 # Authentication
 @app.route('/login')
@@ -41,38 +55,39 @@ def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
 
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    # Validate state token
+    # Token Validation
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    # Obtain authorization code
+
+    # Auth Code
     code = request.data
 
     try:
-        # Upgrade the authorization code into a credentials object
+        # Auth to credentials
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
+
     except FlowExchangeError:
         response = make_response(
             json.dumps('Failed to upgrade the authorization code.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Check that the access token is valid.
+    # Is token valid?
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
-    # If there was an error in the access token info, abort.
+
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
@@ -82,7 +97,7 @@ def gconnect():
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
         response = make_response(
-            json.dumps("Token's user ID doesn't match given user ID."), 401)
+            json.dumps("Token's user ID does NOT match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -96,13 +111,14 @@ def gconnect():
 
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
+
     if stored_access_token is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('Current user is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Store the access token in the session for later use.
+    # Token to session
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
@@ -110,13 +126,11 @@ def gconnect():
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-
     data = answer.json()
 
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    # ADD PROVIDER TO LOGIN SESSION
     login_session['provider'] = 'google'
 
     # see if user exists, if it doesn't make a new one
@@ -216,9 +230,11 @@ def login_required(f):
 # App Routing
 @app.route('/')
 def showLanding():
+    categories = session.query(Category).order_by(asc(Category.name))
     latestItems = session.query(Item).order_by(Item.id.desc())
     return render_template(
         'index.html',
+        categories=categories,
         latestItems=latestItems)
 
 @app.route('/catalog')
@@ -246,60 +262,101 @@ def itemDetails(category_id, item_id):
     return render_template('itemDetail.html', item=item, category=category)
 
 
-@app.route('/catalog/items/new', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/items/new', methods=['GET', 'POST'])
 @login_required
-def newItem():
-    categories = session.query(Category).order_by(asc(Category.name))
+def newItem(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
     user_id = login_session['user_id']
+
     if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        filename = ''
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         category = session.query(Category).filter_by(
             name=request.form['category']).one()
+
         newItem = Item(
             name=request.form['name'],
+            manufacturer=request.form['manufacturer'],
             description=request.form['description'],
+            image_url = filename,
             price=request.form['price'],
             category_id=category.id,
-            created=datetime.datetime.now(),
+            date_created=datetime.datetime.now(),
             user_id=user_id)
+
         session.add(newItem)
         session.commit()
         flash('New Item -  %s  Successfully Created' % (newItem.name))
         return redirect(url_for('showLanding'))
     else:
-        return render_template('newitem.html', categories=categories)
-
-# Edit an item
+        return render_template('newItem.html', category=category)
 
 
-@app.route('/catalog/<int:item_id>/edit', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/edit', methods=['GET', 'POST'])
 @login_required
-def editItem(item_id):
+def editItem(item_id, category_id):
     categories = session.query(Category).order_by(asc(Category.name))
     item = session.query(Item).filter_by(id=item_id).one()
+
+    old_file = item.image_url
+
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit other users' items.');}</script><body onload='myFunction()''>"
+
     if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        filename = ''
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        if file.filename == old_file:
+            print "SAME FILE"
+        else:
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         if request.form['name']:
             category = session.query(Category).filter_by(
                 name=request.form['category']).one()
             item.name = request.form['name']
             item.description = request.form['description']
             item.price = request.form['price']
-
+            item.image_url = filename
             item.category_id = category.id
             flash('%s Successfully Edited' % item.name)
             return redirect(url_for('showItems', category_id=item.category.id))
     else:
         return render_template(
-            'edititem.html',
+            'editItem.html',
             categories=categories,
             item=item)
 
-
-# Delete an item
-@app.route('/catalog/<int:item_id>/delete', methods=['GET', 'POST'])
+# Delete Item
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
-def deleteItem(item_id):
+def deleteItem(item_id, category_id):
     item = session.query(Item).filter_by(id=item_id).one()
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete other users' items.');}</script><body onload='myFunction()''>"
@@ -307,13 +364,12 @@ def deleteItem(item_id):
         session.delete(item)
         flash('%s Successfully Deleted' % item.name)
         session.commit()
-        return redirect(url_for('showItems', category_id=item.category.id))
+        return redirect(url_for('showItems', category_id=category_id))
     else:
         return render_template('deleteitem.html', item=item)
 
-# Add a new category
 
-
+# Add category
 @app.route('/catalog/new', methods=['GET', 'POST'])
 @login_required
 def newCategory():
@@ -329,7 +385,7 @@ def newCategory():
 
 
 # Edit a category
-@app.route('/catalog/category/<int:category_id>/edit', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def editCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
@@ -345,11 +401,7 @@ def editCategory(category_id):
 
 
 # Delete a category and all of the items associated with it
-@app.route(
-    '/catalog/category/<int:category_id>/delete',
-    methods=[
-        'GET',
-        'POST'])
+@app.route('/catalog/<int:category_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
