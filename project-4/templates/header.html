@@ -1,16 +1,17 @@
 <header>
-  <nav class="navbar navbar-default" style="background-color:#033849;">
+  <nav class="navbar navbar-default">
     <div class="container">
       <div class="pull-left">
-        <a class="navbar-brand" href="{{url_for('showLanding')}}" style="color:#FFF">
+        <a class="navbar-brand" href="{{url_for('showLanding')}}">
           Catalog App
         </a>
       </div>
+
       <div class="pull-right">
         {% if 'email' not in session %}
-        <a href="{{url_for('showLogin')}}"><button type="button" class="btn btn-success" style="margin-top:8px;">Login</button></a>
+        <a href="{{url_for('showLogin')}}"><button type="button" class="btn btn-success">Login</button></a>
         {% else %}
-        <a href="{{url_for('disconnect')}}"><button type="button" class="btn btn-success" style="margin-top:8px;">Logout</button></a>
+        <a href="{{url_for('disconnect')}}"><button type="button" class="btn btn-success">Logout</button></a>
         {% endif %}
       </div>
     </div>

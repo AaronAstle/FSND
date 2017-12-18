@@ -273,13 +273,14 @@ def newItem(category_id):
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
-        filename = ''
+
         file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -287,6 +288,7 @@ def newItem(category_id):
         category = session.query(Category).filter_by(
             name=request.form['category']).one()
 
+        # Set up new item to persist
         newItem = Item(
             name=request.form['name'],
             manufacturer=request.form['manufacturer'],
@@ -311,32 +313,25 @@ def editItem(item_id, category_id):
     categories = session.query(Category).order_by(asc(Category.name))
     item = session.query(Item).filter_by(id=item_id).one()
 
+    # Temp hold of old image name
     old_file = item.image_url
 
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit other users' items.');}</script><body onload='myFunction()''>"
 
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
 
-        filename = ''
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
 
-        if file.filename == old_file:
-            print "SAME FILE"
+        # If no change to file skip setter
+        if file.filename == '' or file.filename == old_file:
+            filename = old_file
         else:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
+        # Edited item
         if request.form['name']:
             category = session.query(Category).filter_by(
                 name=request.form['category']).one()
@@ -345,25 +340,25 @@ def editItem(item_id, category_id):
             item.price = request.form['price']
             item.image_url = filename
             item.category_id = category.id
+            session.commit()
             flash('%s Successfully Edited' % item.name)
             return redirect(url_for('showItems', category_id=item.category.id))
     else:
-        return render_template(
-            'editItem.html',
-            categories=categories,
-            item=item)
+        return render_template('editItem.html', categories=categories, item=item)
 
 # Delete Item
 @app.route('/catalog/<int:category_id>/items/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteItem(item_id, category_id):
     item = session.query(Item).filter_by(id=item_id).one()
+
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete other users' items.');}</script><body onload='myFunction()''>"
+
     if request.method == 'POST':
         session.delete(item)
-        flash('%s Successfully Deleted' % item.name)
         session.commit()
+        flash('%s Successfully Deleted' % item.name)
         return redirect(url_for('showItems', category_id=category_id))
     else:
         return render_template('deleteitem.html', item=item)
@@ -374,6 +369,7 @@ def deleteItem(item_id, category_id):
 @login_required
 def newCategory():
     user_id = login_session['user_id']
+
     if request.method == 'POST':
         newCategory = Category(name=request.form['name'], user_id=user_id)
         session.add(newCategory)
@@ -419,6 +415,30 @@ def deleteCategory(category_id):
         return redirect(url_for('showLanding'))
     else:
         return render_template('deleteCategory.html', category=category)
+
+
+#  API Endpoints
+@app.route('/api/catalog/JSON')
+def catalogJSON():
+    categories = session.query(Category).all()
+    items = session.query(Item).all()
+    return jsonify(
+        Categories = [category.serialize for category in categories],
+        Items = [item.serialize for item in items]
+    )
+
+@app.route('/api/catalog/<int:category_id>/JSON')
+def showCategoryJson(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category.id).all()
+    return jsonify(
+        Category = [item.serialize for item in items]
+    )
+
+@app.route('/api/catalog/<int:category_id>/item/<int:item_id>/JSON')
+def showItemJson(category_id, item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+    return jsonify(item = item.serialize)
 
 
 # Boilerplate App Run

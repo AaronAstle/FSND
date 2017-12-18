@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "header.html" %}
-<div class="container" style="background-color:#FFF;">
-  <div class = 'flash'>
+
+<div class="container">
+  <div class="row">
+
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li><strong> {{ message }} </strong> </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
+    <div class="flash">
+      <ul>
+        {% for message in messages %}
+        <li class="alert alert-info"><strong> {{ message }} </strong> </li>
+        {% endfor %}
+      </ul>
+
+      {% endif %}
+      {% endwith %}
+    </div>
   </div>
+
   <div class="row">
     <div class="col-md-12">
       <h2>Things</h2>
