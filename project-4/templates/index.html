@@ -26,16 +26,28 @@
     <div class="col-md-12">
 
       <h2>Categories</h2>
+      <div class="card-group">
 
-      <ul class="list-unstyled">
         {% for category in categories %}
-        <li>
-          <a href="{{url_for('showItems', category_id = category.id)}}">
+        <div class="card ">
+          <img class="card-img-top" src="{{ url_for('send_file', filename='basic.jpg') }}" alt="Image for category" />
+          <p>{{category.description}}</p>
+          <a class="btn btn-default" href="{{url_for('showItems', category_id = category.id)}}">
             {{ category.name }}
-          </a> ({{ category.name }})
-        </li>
+          </a>
+        </div>
         {% endfor %}
-      </ul>
+      </div>
+
+      <!-- <ul class="list-unstyled"> -->
+      <!-- {% for category in categories %} -->
+      <!-- <li> -->
+      <!-- <a href="{{url_for('showItems', category_id = category.id)}}"> -->
+      <!-- {{ category.name }} -->
+      <!-- </a> ({{ category.name }}) -->
+      <!-- </li> -->
+      <!-- {% endfor %} -->
+      <!-- </ul> -->
 
       <h2>Latest Items</h2>
       <ul class="list-unstyled">
