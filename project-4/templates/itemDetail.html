@@ -21,23 +21,33 @@
   </div>
 
   <div class="row">
+
     <div class="col-md-12">
-      <h2>{{ item.name }}</h2>
-      <h5>{{ item.price }} | {{ item.category.name }}</h5>
-
-      <p>{{ item.description }}</p>
-
-      <div>
-        <img class="img-responsive" src="{{ url_for('send_file', filename=item.image_url) }}" />
+      <div class="float-right">
+        {% if 'username' in session %}
+        <a class="btn btn-warning" href='{{url_for('editItem', category_id = item.category.id, item_id = item.id)}}'>Edit</a>
+        <a class="btn btn-danger" href='{{url_for('deleteItem', category_id = item.category.id, item_id = item.id) }}'>Delete</a>
       </div>
-      <br>
+      {% endif %}
     </div>
-    {% if 'username' in session %}
-    <div class="col-md-12">
-      <a href='{{url_for('editItem', category_id = item.category.id, item_id = item.id)}}'>Edit</a> |
-      <a href='{{url_for('deleteItem', category_id = item.category.id, item_id = item.id) }}'>Delete</a>
-    </div>
-    {% endif %}
   </div>
+
+  <div class="col-md-12">
+    {% if item.image_name %}
+    <img class="img-fluid" src="{{ url_for('send_file', filename=item.image_name) }}" alt="Image for {{item.name}}" />
+    {% else %}
+    <img class="img-fluid" src="{{ url_for('send_static', filename='noimage.svg') }}" alt="Image for {{item.name}}" />
+    {% endif %}
+    <h2>{{ item.name }}</h2>
+    <h5>{{ item.price }} | {{ item.category.name }}</h5>
+
+    <p>{{ item.description }}</p>
+
+    <div>
+
+    </div>
+    <br>
+  </div>
+</div>
 </div>
 {% endblock %}

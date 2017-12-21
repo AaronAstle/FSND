@@ -22,6 +22,7 @@ import random
 import requests
 import string
 
+STATIC_IMAGES_FOLDER = 'static/images'
 UPLOAD_FOLDER = 'public/uploads/'
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'gif'])
 
@@ -48,6 +49,10 @@ def allowed_file(filename):
 @app.route('/public/uploads/<filename>')
 def send_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+@app.route('/static/images/<filename>')
+def send_static(filename):
+    return send_from_directory(STATIC_IMAGES_FOLDER, filename)
 
 # Authentication
 @app.route('/login')
@@ -229,6 +234,7 @@ def login_required(f):
 
 # App Routing
 @app.route('/')
+@app.route('/catalog')
 def showLanding():
     categories = session.query(Category).order_by(asc(Category.name))
     latestItems = session.query(Item).order_by(Item.id.desc())
@@ -237,14 +243,6 @@ def showLanding():
         categories=categories,
         latestItems=latestItems)
 
-@app.route('/catalog')
-def showCatalog():
-    categories = session.query(Category).order_by(asc(Category.name))
-    latestItems = session.query(Item).order_by(Item.id.desc())
-    return render_template(
-        'catalog.html',
-        categories=categories,
-        latestItems=latestItems)
 
 @app.route('/catalog/<int:category_id>/items')
 def showItems(category_id):
@@ -314,7 +312,7 @@ def editItem(item_id, category_id):
     item = session.query(Item).filter_by(id=item_id).one()
 
     # Temp hold of old image name
-    old_file = item.image_url
+    old_file = item.image_name
 
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit other users' items.');}</script><body onload='myFunction()''>"
@@ -338,7 +336,7 @@ def editItem(item_id, category_id):
             item.name = request.form['name']
             item.description = request.form['description']
             item.price = request.form['price']
-            item.image_url = filename
+            item.image_name = filename
             item.category_id = category.id
             session.commit()
             flash('%s Successfully Edited' % item.name)

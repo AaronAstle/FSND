@@ -4,7 +4,6 @@
 
 <div class="container">
   <div class="row">
-
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <div class="flash">
@@ -13,41 +12,35 @@
         <li class="alert alert-info"><strong> {{ message }} </strong> </li>
         {% endfor %}
       </ul>
-
     </div>
     {% endif %}
     {% endwith %}
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <img class="img-responsive" src="bg_main.jpg" />
+    <div class="hero col-md-12">
+      <h1 class="hero__title">Welcome to Bikes N things</h1>
     </div>
-    <div class="col-md-12">
+  </div>
 
+  <div class="row">
+    <div class="col-md-12">
       <h2>Categories</h2>
       <div class="card-group">
-
         {% for category in categories %}
-        <div class="card ">
-          <img class="card-img-top" src="{{ url_for('send_file', filename='basic.jpg') }}" alt="Image for category" />
-          <p>{{category.description}}</p>
-          <a class="btn btn-default" href="{{url_for('showItems', category_id = category.id)}}">
-            {{ category.name }}
-          </a>
+        <div class="card">
+          <img class="card-img-top" src="{{ url_for('send_static', filename=category.image_name) }}" alt="Image for category" />
+          <div class="card-body text-center">
+            <p>
+            <a class="btn btn-dark" href="{{url_for('showItems', category_id = category.id)}}">
+              {{ category.name }}
+            </a>
+          </div>
         </div>
         {% endfor %}
       </div>
 
-      <!-- <ul class="list-unstyled"> -->
-      <!-- {% for category in categories %} -->
-      <!-- <li> -->
-      <!-- <a href="{{url_for('showItems', category_id = category.id)}}"> -->
-      <!-- {{ category.name }} -->
-      <!-- </a> ({{ category.name }}) -->
-      <!-- </li> -->
-      <!-- {% endfor %} -->
-      <!-- </ul> -->
+      <hr />
 
       <h2>Latest Items</h2>
       <ul class="list-unstyled">

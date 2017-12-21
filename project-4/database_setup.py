@@ -19,7 +19,8 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    image_url = Column(String(250))
+    description = Column(String(250))
+    image_name = Column(String(250))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
@@ -28,6 +29,8 @@ class Category(Base):
         """Return object data in easily serializeable format"""
         return {
             'name': self.name,
+            'description': self.description,
+            'image_name': self.image_name,
             'id': self.id,
         }
 
@@ -40,7 +43,7 @@ class Item(Base):
     price = Column(String(10), nullable=False)
     description = Column(String(250), nullable=False)
     manufacturer = Column(String(100), nullable=False)
-    image_url = Column(String(250))
+    image_name = Column(String(250))
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
     date_created = Column(DateTime)
@@ -52,6 +55,7 @@ class Item(Base):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
+            'image_name': self.image_name,
             'name': self.name,
             'description': self.description,
             'manufacturer': self.manufacturer,

@@ -3,44 +3,61 @@
 {% include "header.html" %}
 
 <div class="container">
-
   <div class="row">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-
-    <div class="alert alert-info">
+    <div class="flash">
       <ul>
         {% for message in messages %}
-        <li><strong> {{ message }} </strong> </li>
+        <li class="alert alert-info"><strong> {{ message }} </strong> </li>
         {% endfor %}
       </ul>
     </div>
-
     {% endif %}
     {% endwith %}
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <h2>{{ category.name }}</h2>
+      <h2 class="float-left">{{ category.name }}</h2>
       {% if 'username' in session %}
-      <a href="{{url_for('deleteCategory', category_id = category.id)}}">Delete Category</a> | <a href="{{url_for('editCategory', category_id = category.id)}}">Edit Category</a>
+      <div class="float-right">
+        <a class="btn btn-warning" href="{{url_for('editCategory', category_id = category.id)}}">Edit Category</a>
+        <a class="btn btn-danger" href="{{url_for('deleteCategory', category_id = category.id)}}">Delete Category</a>
+      </div>
       {% endif %}
     </div>
-
+  </div>
+  <hr />
+  <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
-
-      <div class="pull-right">
-        <a href="{{url_for('newItem', category_id = category.id)}}">Add New Item</a>
+      <div class="float-right">
+        {% if 'username' in session %}
+        <a class="btn btn-outline-info" href="{{url_for('newItem', category_id = category.id)}}">Add New Item</a>
+        {% endif %}
       </div>
 
-      <ul class="list-unstyled">
+      <div class="clearfix"></div>
+
+      <div class="mt-3 card-group">
         {% for item in items %}
-        <li><a href="{{url_for('itemDetails', category_id = item.category.id, item_id = item.id)}}">{{ item.name }}</a> ({{ item.category.name }})</li>
-        {% endfor %}
-      </ul>
+        <div class="card">
+          {% if item.image_name %}
+          <img class="card-img-top" src="{{ url_for('send_file', filename=item.image_name) }}" alt="Image for {{item.name}}" />
+          {% else %}
+          <img class="card-img-top" src="{{ url_for('send_static', filename='noimage.svg') }}" alt="Image for {{item.name}}" />
+          {% endif %}
+          <div class="card-body text-center">
+            <p>
+              <a class="btn btn-dark" href="{{url_for('itemDetails', category_id=category.id, item_id = item.id)}}">
+                {{ item.name }}
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
     </div>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}

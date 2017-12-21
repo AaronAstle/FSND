@@ -10,21 +10,21 @@
   * Develop a RESTful web application using the Python framework Flask
   * Implementing third-party OAuth authentication.
   * Implementing CRUD (create, read, update and delete) operations.
-  
-### How to Run?
 
-#### PreRequisites
+### PreRequisites
   * [Python ~2.7](https://www.python.org/)
   * [Vagrant](https://www.vagrantup.com/)
   * [VirtualBox](https://www.virtualbox.org/)
-  
-#### Setup Project:
+
+### Setup Project:
   1. Install Vagrant and VirtualBox
   2. Download or Clone [fullstack-nanodegree-vm](https://github.com/udacity/fullstack-nanodegree-vm) repository.
   3. Find the catalog folder and replace it with the content of this current repository, by either downloading or cloning it from
   [Here](https://github.com/sagarchoudhary96/P5-Item-Catalog).
 
-#### Launch Project
+### How to Run?
+
+### Launch Project
   1. Launch the Vagrant VM using command:
   
   ```

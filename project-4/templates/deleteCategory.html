@@ -4,14 +4,15 @@
 
 <div class="container" style="background-color:#FFF;">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 pb-3">
       <h2> Are you sure you want to delete {{category.name}} and all items associated with it? </h2>
 
       <form action="#" method = 'post'>
-        <button type="submit" class="btn btn-default delete" id="submit" type="submit">
+        <button type="submit" class="btn btn-danger" id="submit" type="submit">
           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete</button>
-        <a href = '{{url_for('showCatalog')}}'>
-          <button class="btn btn-default delete">
+
+        <a href = '{{url_for('showLanding')}}'>
+          <button class="btn btn-warning">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
         </a>
 

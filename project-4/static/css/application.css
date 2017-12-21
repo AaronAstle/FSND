@@ -1,1 +1,42 @@
 /* base Styles for Application */
+
+header {
+  margin-bottom: 20px;
+}
+
+/* index */
+.hero {
+  color: #fff;
+  background-image: url("/static/images/home_bg.jpg");
+  background-position: center center;
+  background-size: cover;
+  height: 350px;
+  padding: 120px 0;
+  margin: 20px 0 40px;
+}
+h1.hero__title {
+  padding: 30px;
+  background: rgba(200,200,200, 0.5) ;
+  text-align: center;
+}
+
+
+.card-img-top {
+  height: 180px;
+  width: 100%;
+  display: block;
+}
+
+
+/* login */
+#login {
+  background: url('/static/images/login_bg.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.login__panel {
+  margin-top: 10rem;
+  background: rgba(255,255,255, 0.8);
+  border: 1px solid #eee;
+  border-radius: 5px 5px;
+}
