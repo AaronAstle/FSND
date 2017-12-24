@@ -5,5 +5,5 @@
 *.vagrant
 
 *.db-journal
-project-4/*.db
+project-4/bikes.db
 project-4/public/uploads/*

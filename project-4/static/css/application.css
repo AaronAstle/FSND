@@ -40,3 +40,11 @@ h1.hero__title {
   border: 1px solid #eee;
   border-radius: 5px 5px;
 }
+
+.something {
+  width: 300px;
+  height: 300px;
+  border-radius: 150px;
+  -webkit-border-radius: 150px;
+  -moz-border-radius: 150px;
+}

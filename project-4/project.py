@@ -1,5 +1,14 @@
 #!/usr/bin/python
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response, send_from_directory
+from flask import (Flask,
+                   render_template,
+                   request,
+                   redirect,
+                   url_for,
+                   flash,
+                   jsonify,
+                   make_response,
+                   send_from_directory)
+
 from flask import session as login_session
 
 from sqlalchemy import create_engine, asc
@@ -39,20 +48,24 @@ APPLICATION_NAME = "Bikes N Stuff"
 engine = create_engine('sqlite:///bikes.db')
 Base.metadata.bind = engine
 
-DBSession = sessionmaker(bind = engine)
+DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @app.route('/public/uploads/<filename>')
 def send_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
+
 @app.route('/static/images/<filename>')
 def send_static(filename):
     return send_from_directory(STATIC_IMAGES_FOLDER, filename)
+
 
 # Authentication
 @app.route('/login')
@@ -118,7 +131,7 @@ def gconnect():
     stored_gplus_id = login_session.get('gplus_id')
 
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps('Current user already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -150,7 +163,8 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " class = "something"> '
+
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -369,7 +383,7 @@ def newCategory():
     user_id = login_session['user_id']
 
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'], user_id=user_id)
+        newCategory = Category(name=request.form['name'], description=request.form['description'], user_id=user_id)
         session.add(newCategory)
         session.commit()
         flash('New Category %s Successfully Created' % (newCategory.name))
