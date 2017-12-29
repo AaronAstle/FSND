@@ -1,3 +1,4 @@
+from shutil import copyfile
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -79,5 +80,12 @@ item6 = Item(user_id = 1,
              category=category2)
 session.add(item6)
 session.commit()
+
+
+# Rename/Move seed images for app use.  git reasons.
+copyfile("static/images/highball.jpg", "public/uploads/highball.jpg")
+copyfile("static/images/synapse.jpg", "public/uploads/synapse.jpg")
+copyfile("static/images/mtn_category.jpg", "public/uploads/mtn_category.jpg")
+copyfile("static/images/road_category.jpg", "public/uploads/road_category.jpg")
 
 print "Successful Seeding of data to DB!"

@@ -2,16 +2,16 @@
 {% block content %}
 {% include "header.html" %}
 
-<div class="container" style="background-color:#FFF;">
+<div class="container">
   <div class="row">
     <div class="col-md-12 pb-3">
       <h2> Are you sure you want to delete {{category.name}} and all items associated with it? </h2>
 
-      <form action="#" method = 'post'>
+      <form action="#" method='post'>
         <button type="submit" class="btn btn-danger" id="submit" type="submit">
           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete</button>
 
-        <a href = '{{url_for('showLanding')}}'>
+        <a href='{{url_for('showLanding')}}'>
           <button class="btn btn-warning">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
         </a>
