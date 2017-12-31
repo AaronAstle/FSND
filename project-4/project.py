@@ -33,7 +33,7 @@ import string
 
 STATIC_IMAGES_FOLDER = 'static/images'
 UPLOAD_FOLDER = 'public/uploads/'
-ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
