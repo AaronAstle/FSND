@@ -189,7 +189,7 @@ def getUserID(email):
         user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
-        return None# Disconnect based on provider
+        return None  # Disconnect based on provider
 
 
 @app.route('/gdisconnect')
@@ -209,9 +209,12 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400)
+        )
         response.headers['Content-Type'] = 'application/json'
         return response
+
 
 # Disconnect based on provider
 @app.route('/disconnect')
@@ -305,7 +308,7 @@ def newItem(category_id):
             name=request.form['name'],
             manufacturer=request.form['manufacturer'],
             description=request.form['description'],
-            image_url = filename,
+            image_url=filename,
             price=request.form['price'],
             category_id=category.id,
             date_created=datetime.datetime.now(),
@@ -319,7 +322,8 @@ def newItem(category_id):
         return render_template('newItem.html', category=category)
 
 
-@app.route('/catalog/<int:category_id>/items/<int:item_id>/edit', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/edit',
+           methods=['GET', 'POST'])
 @login_required
 def editItem(item_id, category_id):
     categories = session.query(Category).order_by(asc(Category.name))
@@ -329,7 +333,9 @@ def editItem(item_id, category_id):
     old_file = item.image_name
 
     if item.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit other users' items.');}</script><body onload='myFunction()''>"
+        return '''<script>function myFunction() {
+            alert('You are not authorized to edit other users'
+             items.');}</script><body onload='myFunction()''>'''
 
     if request.method == 'POST':
 
@@ -356,16 +362,22 @@ def editItem(item_id, category_id):
             flash('%s Successfully Edited' % item.name)
             return redirect(url_for('showItems', category_id=item.category.id))
     else:
-        return render_template('editItem.html', categories=categories, item=item)
+        return render_template('editItem.html',
+                               categories=categories,
+                               item=item)
+
 
 # Delete Item
-@app.route('/catalog/<int:category_id>/items/<int:item_id>/delete', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/delete',
+           methods=['GET', 'POST'])
 @login_required
 def deleteItem(item_id, category_id):
     item = session.query(Item).filter_by(id=item_id).one()
 
     if item.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete other users' items.');}</script><body onload='myFunction()''>"
+        return '''<script>function myFunction() {
+                alert('You are not authorized to delete other users' items.');
+                }</script><body onload='myFunction()''>'''
 
     if request.method == 'POST':
         session.delete(item)
@@ -383,7 +395,9 @@ def newCategory():
     user_id = login_session['user_id']
 
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'], description=request.form['description'], user_id=user_id)
+        newCategory = Category(name=request.form['name'],
+                               description=request.form['description'],
+                               user_id=user_id)
         session.add(newCategory)
         session.commit()
         flash('New Category %s Successfully Created' % (newCategory.name))
@@ -398,7 +412,10 @@ def newCategory():
 def editCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     if category.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit other users' categories.');}</script><body onload='myFunction()''>"
+        return '''<script>function myFunction() {
+                alert('You are not authorized to edit other users'
+                categories.');}</script><body onload='myFunction()''>'''
+
     if request.method == 'POST':
         if request.form['name']:
             category.name = request.form['name']
@@ -415,14 +432,17 @@ def deleteCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category.id).all()
     if category.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete other users' categories.');}</script><body onload='myFunction()''>"
+        return '''<script>function myFunction() {
+                alert('You are not authorized to delete other users'
+                categories.');}</script><body onload='myFunction()''>'''
+
     if request.method == 'POST':
         for item in items:
             session.delete(item)
         session.delete(category)
         flash(
-            '%s Category and All Items Associated with this Category Successfully Deleted' %
-            category.name)
+            '''%s Category and All Items Associated with this
+            Category Successfully Deleted''' % category.name)
         session.commit()
         return redirect(url_for('showLanding'))
     else:
@@ -435,22 +455,24 @@ def catalogJSON():
     categories = session.query(Category).all()
     items = session.query(Item).all()
     return jsonify(
-        Categories = [category.serialize for category in categories],
-        Items = [item.serialize for item in items]
+        Categories=[category.serialize for category in categories],
+        Items=[item.serialize for item in items]
     )
+
 
 @app.route('/api/catalog/<int:category_id>/JSON')
 def showCategoryJson(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category.id).all()
     return jsonify(
-        Category = [item.serialize for item in items]
+        Category=[item.serialize for item in items]
     )
+
 
 @app.route('/api/catalog/<int:category_id>/item/<int:item_id>/JSON')
 def showItemJson(category_id, item_id):
     item = session.query(Item).filter_by(id=item_id).one()
-    return jsonify(item = item.serialize)
+    return jsonify(item=item.serialize)
 
 
 # Boilerplate App Run

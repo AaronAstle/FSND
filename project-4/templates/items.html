@@ -47,6 +47,7 @@
           {% else %}
           <img class="card-img-top" src="{{ url_for('send_static', filename='noimage.svg') }}" alt="Image for {{item.name}}" />
           {% endif %}
+
           <div class="card-body text-center">
             <p>
               <a class="btn btn-dark" href="{{url_for('itemDetails', category_id=category.id, item_id = item.id)}}">

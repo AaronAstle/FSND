@@ -41,7 +41,6 @@
 
           {% if category.image_name %}
           <img class="card-img-top" src="{{ url_for('send_file', filename=category.image_name) }}" alt="Image for {{category.name}}" />
-          <img class="card-img-top" src="{{ url_for('send_static', filename=category.image_name) }}" alt="Image for category" />
           {% else %}
           <img class="card-img-top" src="{{ url_for('send_static', filename='noimage.svg') }}" alt="Image for {{category.name}}" />
           {% endif %}

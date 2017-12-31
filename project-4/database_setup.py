@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "user"
 
@@ -13,6 +14,7 @@ class User(Base):
     email = Column(String(250), nullable=False)
     provider = Column(String(250))
     image_url = (String(250))
+
 
 class Category(Base):
     __tablename__ = 'category'
