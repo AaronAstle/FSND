@@ -6,3 +6,5 @@
 
 *.db-journal
 project-4/bikes.db
+
+project-5/node_modules/*

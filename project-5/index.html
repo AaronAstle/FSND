@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Neighborhood Map App</title>
+    <link rel="stylesheet" href="./dist/styles/main.css"/>
+
+    <script src="./dist/scripts/vendor-scripts.js"></script>
+    <!-- <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU"></script> -->
+  </head>
+  <body>
+    <header>
+      <nav>
+        <h1>Sacramento Neighborhood Map App</h1>
+      </nav>
+    </header>
+    <div class="container-fluid">
+      <aside class="options-box">
+        <h1>Options</h1>
+        <hr>
+        <div>
+          <input id="show-listings" type="button" value="Show Listings">
+          <input id="hide-listings" type="button" value="Hide Listings">
+        </div>
+        <hr>
+        <div>
+          <span class="text"> Within </span>
+          <div>
+            <span class="text">Search for nearby places</span>
+            <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
+            <input id="go-places" type="button" value="Go">
+          </div>
+        </div>
+      </aside>
+      <div id="map"></div>
+
+      <!-- Scripts -->
+      <script async defer src=
+        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU&v=3&callback=initMap">
+      </script>
+      <script src="./dist/scripts/application.js"></script>
+    </body>
+  </html>
