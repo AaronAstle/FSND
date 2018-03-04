@@ -86,43 +86,48 @@ function initMap() {
     self.URL = "";
     self.street = "";
     self.city = "";
-    self.phone = "";
+    self.phoneNum = "";
 
-    this.visible = ko.observable(true);
+    self.visible = ko.observable(true);
 
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll='+ this.lat + ',' + this.lng + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20160118' + '&query=' + this.name;
 
-    $.getJSON(foursquareURL).done(function(data) {
-      var results = data.response.venues[0];
-      console.log(results);
-      self.street = results.location.formattedAddress[0];
-      self.city = results.location.formattedAddress[1];
-      self.phone = results.contact.phone;
-      if (typeof self.phone === 'undefined'){
-        self.phone = "";
-      } else {
-        console.log(self.phone);
-        // self.phone = formatPhone(self.phone);
-      }
-    }).fail(function() {
-      alert("There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.");
-    });
+    $.getJSON(foursquareURL)
+      .done(function(data) {
+        var results = data.response.venues[0];
+        self.street = results.location.formattedAddress[0];
+        self.city = results.location.formattedAddress[1];
+        self.phoneNum = results.contact.phone;
+        if (typeof self.phoneNum === 'undefined'){
+          self.phoneNum = "";
+        } else {
+          self.phoneNum = self.phoneNum.replace(/[^\d]/g, "");
+          self.phoneNum = self.phoneNum.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+        }
+      })
+      .fail(function() {
+        alert("Failure to get infor from FourSquare.  Try back later.");
+      });
 
-    this.contentString = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
+    self.content = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
       '<div class="content"><a href="' + self.URL +'">' + self.URL + "</a></div>" +
       '<div class="content">' + self.street + "</div>" +
       '<div class="content">' + self.city + "</div>" +
-      '<div class="content">' + self.phone + "</div></div>";
+      '<div class="content">' + self.phoneNum + "</div></div>";
 
-    this.infoWindow = new google.maps.InfoWindow({content: self.contentString});
+    self.infoWindow = new google.maps.InfoWindow({content: self.content});
 
-    this.marker = new google.maps.Marker({
+    self.marker = new google.maps.Marker({
       position: new google.maps.LatLng(self.lat, self.lng),
       map: map,
       title: self.name
     });
 
-    this.showMarker = ko.computed(function() {
+    self.show = function(location) {
+        google.maps.event.trigger(self.marker, 'click');
+    };
+
+    self.showMarker = ko.computed(function() {
       if(this.visible() === true) {
         this.marker.setMap(map);
       } else {
@@ -131,16 +136,17 @@ function initMap() {
       return true;
     }, this);
 
-    this.marker.addListener('click', function(){
-      self.contentString = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
+    self.marker.addListener('click', function(){
+      // VISIT INFOWINDOW DOCS!!  Need to clear before population
+      //
+      self.content = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
         '<div class="content"><a href="' + self.URL +'">' + self.URL + "</a></div>" +
         '<div class="content">' + self.street + "</div>" +
         '<div class="content">' + self.city + "</div>" +
-        '<div class="content"><a href="tel:' + self.phone +'">' + self.phone +"</a></div></div>";
+        '<div class="content"><a href="tel:' + self.phoneNum +'">' + self.phoneNum +"</a></div></div>";
 
-      self.infoWindow.setContent(self.contentString);
+      self.infoWindow.setContent(self.content);
 
-      self.infoWindow.close();
       self.infoWindow.open(map, this);
 
       self.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -157,9 +163,9 @@ function initMap() {
   function AppViewModel() {
     var self = this;
 
-    this.locationFilter = ko.observable("");
+    self.locationFilter = ko.observable("");
 
-    this.locationList = ko.observableArray([]);
+    self.locationList = ko.observableArray([]);
 
     // Foursquare API settings
     clientID = "BSXQ0ZCOWSV42AUZY1WQAW5RVFPNNZKZV5DZWMB11GG0DON0";
@@ -169,7 +175,7 @@ function initMap() {
       self.locationList.push( new Location(locationItem));
     });
 
-    this.filteredList = ko.computed( function() {
+    self.filteredList = ko.computed( function() {
       var filter = self.locationFilter().toLowerCase();
       if (!filter) {
         self.locationList().forEach(function(locationItem){
@@ -186,12 +192,12 @@ function initMap() {
       }
     }, self);
 
-    this.mapElem = document.getElementById('map');
-    this.mapElem.style.height = window.innerHeight - 50;
+    self.mapElem = document.getElementById('map');
+    self.mapElem.style.height = window.innerHeight - 50;
   }
 
   function errorHandling() {
-    alert("Google Maps has failed to load. Please check your internet connection and try again.");
+    alert("Google Failed to load.");
   }
 
   ko.applyBindings(new AppViewModel());

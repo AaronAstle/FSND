@@ -28,29 +28,30 @@
           <div>
             <span class="text">Search for nearby places</span>
             <input
-              id="places-search"
-              type="text"
-              placeholder="Ex: Thai food in Sacramento"
-              data-bind="textInput: locationFilter, valueUpdate: 'afterkeydown'">
+                  id="places-search"
+                  type="text"
+                  placeholder="Ex: Thai food in Sacramento"
+                  data-bind="textInput: locationFilter, valueUpdate: 'afterkeydown'">
             <input id="go-places" type="button" value="Go">
           </div>
         </div>
         <hr />
         <div>
           <h2>List of Locations</h2>
-          <ul data-bind="foreach: locationList">
-            <li data-bind="text: name">
+          <ul class="list-unstyled" data-bind="foreach: locationList">
+            <li>
+              <a href="#" class="list-group-item list-group-item-action" data-bind="text: name, click: show"></a>
             </li>
           </ul>
 
         </div>
       </aside>
       <div id="map"></div>
+    </div>
 
-      <!-- Scripts -->
-      <script async defer src=
-        "https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU&v=3&callback=initMap">
-      </script>
-      <script src="./dist/scripts/application.js"></script>
-    </body>
-  </html>
+    <!-- Scripts -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU&v=3&callback=initMap"></script>
+    <script src="./dist/scripts/application.js"></script>
+
+  </body>
+</html>
