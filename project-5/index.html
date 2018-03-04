@@ -27,14 +27,21 @@
           <span class="text"> Within </span>
           <div>
             <span class="text">Search for nearby places</span>
-            <input id="places-search" type="text" placeholder="Ex: Thai food in Sacramento">
+            <input
+              id="places-search"
+              type="text"
+              placeholder="Ex: Thai food in Sacramento"
+              data-bind="textInput: locationFilter, valueUpdate: 'afterkeydown'">
             <input id="go-places" type="button" value="Go">
           </div>
         </div>
         <hr />
         <div>
           <h2>List of Locations</h2>
-
+          <ul data-bind="foreach: locationList">
+            <li data-bind="text: name">
+            </li>
+          </ul>
 
         </div>
       </aside>
