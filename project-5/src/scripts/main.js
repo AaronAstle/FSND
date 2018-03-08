@@ -9,6 +9,7 @@ function initMap() {
   };
 
   var map = new google.maps.Map(document.getElementById('map'), mapConfigOptions);
+  var infoWindow = new google.maps.InfoWindow({content: ''});
 
   var locationData = [
     {
@@ -115,7 +116,6 @@ function initMap() {
       '<div class="content">' + self.city + "</div>" +
       '<div class="content">' + self.phoneNum + "</div></div>";
 
-    self.infoWindow = new google.maps.InfoWindow({content: self.content});
 
     self.marker = new google.maps.Marker({
       position: new google.maps.LatLng(self.lat, self.lng),
@@ -128,26 +128,27 @@ function initMap() {
     };
 
     self.showMarker = ko.computed(function() {
-      if(this.visible() === true) {
-        this.marker.setMap(map);
+      if(self.visible() === true) {
+        self.marker.setMap(map);
       } else {
-        this.marker.setMap(null);
+        self.marker.setMap(null);
       }
       return true;
     }, this);
 
     self.marker.addListener('click', function(){
-      // VISIT INFOWINDOW DOCS!!  Need to clear before population
-      //
+      // Close previous clicked window
+      infoWindow.close();
+
       self.content = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
         '<div class="content"><a href="' + self.URL +'">' + self.URL + "</a></div>" +
         '<div class="content">' + self.street + "</div>" +
         '<div class="content">' + self.city + "</div>" +
         '<div class="content"><a href="tel:' + self.phoneNum +'">' + self.phoneNum +"</a></div></div>";
 
-      self.infoWindow.setContent(self.content);
+      infoWindow.setContent(self.content);
 
-      self.infoWindow.open(map, this);
+      infoWindow.open(map, this);
 
       self.marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function() {
@@ -155,7 +156,7 @@ function initMap() {
       }, 2100);
     });
 
-    this.bounce = function(place) {
+    self.bounce = function(place) {
       google.maps.event.trigger(self.marker, 'click');
     };
   };
@@ -167,7 +168,6 @@ function initMap() {
 
     self.locationList = ko.observableArray([]);
 
-    // Foursquare API settings
     clientID = "BSXQ0ZCOWSV42AUZY1WQAW5RVFPNNZKZV5DZWMB11GG0DON0";
     clientSecret = "SBIC5HKHK5V3SITRVQ45A3CZBBTBVUZED1QRM5BGFZVLDZGD";
 
