@@ -91,7 +91,9 @@ function initMap() {
 
     self.visible = ko.observable(true);
 
-    var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll='+ this.lat + ',' + this.lng + '&client_id=' + clientID + '&client_secret=' + clientSecret + '&v=20160118' + '&query=' + this.name;
+    var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll='+ //line wrap
+      self.lat + ',' + self.lng + '&client_id=' + clientID + '&client_secret=' + //line wrap
+      clientSecret + '&v=20160118' + '&query=' + self.name;
 
     $.getJSON(foursquareURL)
       .done(function(data) {
