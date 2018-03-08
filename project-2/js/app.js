@@ -3,7 +3,7 @@ function resizeHero() {
   var headerHeight = document.getElementById('header').clientHeight;
   var height = window.innerHeight;
   hero.style.height = (height - headerHeight) + "px";
-};
+}
 
 resizeHero();
 
