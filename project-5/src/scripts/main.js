@@ -4,7 +4,6 @@ function initMap() {
   mapConfigOptions = {
     center: { lat: 38.575997, lng: -121.494923 },
     zoom: 13,
-    // styles: styles,
     mapTypeControl: true
   };
 
@@ -157,17 +156,12 @@ function initMap() {
         self.marker.setAnimation(null);
       }, 2100);
     });
-
-    self.bounce = function(place) {
-      google.maps.event.trigger(self.marker, 'click');
-    };
   };
 
   function AppViewModel() {
     var self = this;
 
     self.locationFilter = ko.observable("");
-
     self.locationList = ko.observableArray([]);
 
     clientID = "BSXQ0ZCOWSV42AUZY1WQAW5RVFPNNZKZV5DZWMB11GG0DON0";
@@ -193,9 +187,6 @@ function initMap() {
         });
       }
     }, self);
-
-    self.mapElem = document.getElementById('map');
-    self.mapElem.style.height = window.innerHeight - 50;
   }
 
   function errorHandling() {
