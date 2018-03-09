@@ -6,9 +6,13 @@
     <title>Neighborhood Map App</title>
     <link rel="stylesheet" href="./dist/styles/main.css"/>
 
-    <script src="./dist/scripts/vendor-scripts.js"></script>
   </head>
   <body>
+    <header>
+      <nav class="navbar">
+        <h1>Sacramento Neighborhood Map App</h1>
+      </nav>
+    </header>
     <div class="container-fluid">
       <aside class="options-box">
         <h1>Sacramento Things</h1>
@@ -17,10 +21,10 @@
           <div>
             <h3 class="title">Search for nearby places</h3>
             <input
-                  id="places-search"
-                  type="text"
-                  placeholder="Ex: Thai food in Sacramento"
-                  data-bind="textInput: locationFilter, valueUpdate: 'afterkeydown'">
+            id="places-search"
+            type="text"
+            placeholder="Ex: Thai food in Sacramento"
+            data-bind="textInput: locationFilter, valueUpdate: 'afterkeydown'">
             <input id="go-places" type="button" value="Go">
           </div>
         </div>
@@ -35,10 +39,13 @@
 
         </div>
       </aside>
-      <div id="map"></div>
+      <div class="row">
+        <div id="map"></div>
+      </div>
     </div>
 
     <!-- Scripts -->
+    <script src="./dist/scripts/vendor-scripts.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU&v=3&callback=initMap"></script>
     <script src="./dist/scripts/application.js"></script>
 

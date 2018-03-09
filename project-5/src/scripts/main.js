@@ -1,7 +1,8 @@
+
 // Data Model
 function initMap() {
 
-  mapConfigOptions = {
+  var mapConfigOptions = {
     center: { lat: 38.575997, lng: -121.494923 },
     zoom: 13,
     mapTypeControl: true
@@ -10,72 +11,8 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), mapConfigOptions);
   var infoWindow = new google.maps.InfoWindow({content: ''});
 
-  var locationData = [
-    {
-      title: "Nugget Market",
-      coords: {
-        lat: 38.5512412,
-        lng: -121.537613
-      },
-      type: "food"
-    },
-    {
-      title: "Mike's Bikes of Sacramento",
-      coords: {
-        lat: 38.5801342,
-        lng: -121.489208
-      },
-      type: "retail"
-    },
-    {
-      title: "LowBrau - Pub",
-      coords: {
-        lat: 38.576069,
-        lng: -121.482683
-      },
-      type: "food"
-    },
-    {
-      title: "Golden 1 Center",
-      coords: {
-        lat: 38.5810192,
-        lng: -121.501754
-      },
-      type: "entertainment"
-    },
-    {
-      title: "Selland's Market Cafe",
-      coords: {
-        lat: 38.564455,
-        lng: -121.500921
-      },
-      type: "food"
-    },
-    {
-      title: "Old Sacramento",
-      coords: {
-        lat: 38.582400,
-        lng: -121.505903
-      },
-      type: "retail"
-    },
-    {
-      title: "Raley Field",
-      coords: {
-        lat: 38.581514,
-        lng: -121.513459
-      },
-      type: "entertainment"
-    },
-    {
-      title: "Ace of Spades",
-      coords: {
-        lat: 38.572353,
-        lng: -121.4929031
-      },
-      type: "entertainment"
-    }
-  ];
+  var clientID = "BSXQ0ZCOWSV42AUZY1WQAW5RVFPNNZKZV5DZWMB11GG0DON0";
+  var clientSecret = "SBIC5HKHK5V3SITRVQ45A3CZBBTBVUZED1QRM5BGFZVLDZGD";
 
 
   var Location = function(data) {
@@ -164,10 +101,7 @@ function initMap() {
     self.locationFilter = ko.observable("");
     self.locationList = ko.observableArray([]);
 
-    clientID = "BSXQ0ZCOWSV42AUZY1WQAW5RVFPNNZKZV5DZWMB11GG0DON0";
-    clientSecret = "SBIC5HKHK5V3SITRVQ45A3CZBBTBVUZED1QRM5BGFZVLDZGD";
-
-    locationData.forEach(function(locationItem){
+    locations.forEach(function(locationItem){
       self.locationList.push( new Location(locationItem));
     });
 
