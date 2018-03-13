@@ -9,4 +9,4 @@ project-4/bikes.db
 
 project-5/node_modules/*
 
-*.package-lock.json
+*/package-lock.json

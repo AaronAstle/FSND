@@ -69,8 +69,8 @@ function initMap() {
         }
       })
       .fail(function(e) {
-        console.log(e);
-        // alert("Failure to get infor from FourSquare.  Try back later. " + e.responseJSON.meta.errorDetail);
+        // console.log(e);
+        alert("Failure to get infor from FourSquare.  Try back later. " + e.responseJSON.meta.errorDetail);
       });
 
     self.content = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
@@ -152,6 +152,6 @@ function initMap() {
   ko.applyBindings(new AppViewModel());
 }
 
-function errorHandling() {
+function googleError() {
   alert("Google Failed to load.");
 }
