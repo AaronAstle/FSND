@@ -8,12 +8,18 @@
 
   </head>
   <body>
-    <header>
-      <nav class="navbar">
-        <h1>Sacramento Neighborhood Map App</h1>
-      </nav>
+    <header class="container">
+      <div class="row">
+        <h3 class="text-center">Sacramento Things</h3>
+      </div>
     </header>
-    <div class="container-fluid">
+
+    <nav id="drawer">
+      <a id="menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
+        </svg>
+      </a>
       <aside class="options-box">
         <h1>Sacramento Things</h1>
         <hr>
@@ -31,7 +37,7 @@
         <hr />
         <div>
           <h2>List of Locations</h2>
-          <ul class="list-unstyled" data-bind="foreach: locationList">
+          <ul class="list-unstyled" data-bind="foreach: filteredList">
             <li>
               <a href="#" class="list-group-item list-group-item-action" data-bind="text: name, click: show"></a>
             </li>
@@ -39,15 +45,16 @@
 
         </div>
       </aside>
-      <div class="row">
-        <div id="map"></div>
-      </div>
-    </div>
+    </nav>
+
+    <main class="container-fluid">
+      <div id="map"></div>
+    </main>
 
     <!-- Scripts -->
     <script src="./dist/scripts/vendor-scripts.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU&v=3&callback=initMap"></script>
     <script src="./dist/scripts/application.js"></script>
 
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB2pE1JdM8jpOLj1js8a_vKoTgTtCS-9BU&v=3&callback=initMap" onerror="googleError()"></script>
   </body>
 </html>

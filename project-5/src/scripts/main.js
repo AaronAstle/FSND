@@ -1,11 +1,35 @@
 
+
+/*
+ * Open the drawer when the menu ison is clicked.
+ */
+var menu = document.querySelector('#menu');
+var main = document.querySelector('main');
+var drawer = document.querySelector('#drawer');
+
+menu.addEventListener('click', function(e) {
+  drawer.classList.toggle('open');
+  menu.classList.toggle('open');
+  e.stopPropagation();
+});
+main.addEventListener('click', function() {
+  drawer.classList.remove('open');
+  menu.classList.remove('open');
+});
+
+
 // Data Model
 function initMap() {
+  "use strict";
 
   var mapConfigOptions = {
     center: { lat: 38.575997, lng: -121.494923 },
     zoom: 13,
-    mapTypeControl: true
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.TOP_RIGHT
+    }
   };
 
   var map = new google.maps.Map(document.getElementById('map'), mapConfigOptions);
@@ -44,8 +68,9 @@ function initMap() {
           self.phoneNum = self.phoneNum.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
         }
       })
-      .fail(function() {
-        alert("Failure to get infor from FourSquare.  Try back later.");
+      .fail(function(e) {
+        console.log(e);
+        // alert("Failure to get infor from FourSquare.  Try back later. " + e.responseJSON.meta.errorDetail);
       });
 
     self.content = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
@@ -62,7 +87,7 @@ function initMap() {
     });
 
     self.show = function(location) {
-        google.maps.event.trigger(self.marker, 'click');
+      google.maps.event.trigger(self.marker, 'click');
     };
 
     self.showMarker = ko.computed(function() {
@@ -123,9 +148,10 @@ function initMap() {
     }, self);
   }
 
-  function errorHandling() {
-    alert("Google Failed to load.");
-  }
 
   ko.applyBindings(new AppViewModel());
+}
+
+function errorHandling() {
+  alert("Google Failed to load.");
 }
