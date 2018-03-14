@@ -67,6 +67,24 @@ var locations = [
 
 
 
+/*
+ * Open the drawer when the menu ison is clicked.
+ */
+var menu = document.querySelector('#menu');
+var main = document.querySelector('main');
+var drawer = document.querySelector('#drawer');
+
+menu.addEventListener('click', function(e) {
+  drawer.classList.toggle('open');
+  menu.classList.toggle('open');
+  e.stopPropagation();
+});
+main.addEventListener('click', function() {
+  drawer.classList.remove('open');
+  menu.classList.remove('open');
+});
+
+
 // Data Model
 function initMap() {
   "use strict";
@@ -118,8 +136,7 @@ function initMap() {
         }
       })
       .fail(function(e) {
-        console.log(e);
-        // alert("Failure to get infor from FourSquare.  Try back later. " + e.responseJSON.meta.errorDetail);
+        alert("Failure to get infor from FourSquare.  Try back later. " + e.responseJSON.meta.errorDetail);
       });
 
     self.content = '<div class="info-window-content"><div class="title"><b>' + self.name + "</b></div>" +
@@ -195,26 +212,6 @@ function initMap() {
         });
       }
     }, self);
-
-    self.showMenu = function(data, event) {
-      console.log(data, event);
-
-      var menu = document.querySelector('#menu');
-      var main = document.querySelector('main');
-      var drawer = document.querySelector('#drawer');
-
-      menu.addEventListener('click', function(e) {
-        drawer.classList.toggle('open');
-        menu.classList.toggle('open');
-        e.stopPropagation();
-      });
-      main.addEventListener('click', function() {
-        drawer.classList.remove('open');
-        menu.classList.remove('open');
-      });
-      c;Locatio
-
-    };
   }
 
 
